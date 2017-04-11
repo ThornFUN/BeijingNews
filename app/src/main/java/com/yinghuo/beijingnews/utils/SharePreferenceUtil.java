@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
  * Created by jin on 2017/4/1.
  */
 
-public class saveUtil   {
+public class SharePreferenceUtil {
 
     public static final String SHARE_DATA = "share_data";
 
@@ -19,9 +19,10 @@ public class saveUtil   {
         return sharedPreferences.getBoolean(key,false);
     }
 
-    public  static void setBoolean(Context context,String key,boolean value){
+    public static void setBoolean(Context context,String key,boolean value){
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARE_DATA, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key,value);
+        editor.commit();
     }
 }

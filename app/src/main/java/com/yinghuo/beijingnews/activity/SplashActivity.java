@@ -1,27 +1,25 @@
 package com.yinghuo.beijingnews.activity;
 
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.widget.RelativeLayout;
 
 import com.yinghuo.beijingnews.R;
-import com.yinghuo.beijingnews.utils.saveUtil;
+import com.yinghuo.beijingnews.utils.LogUtil;
+import com.yinghuo.beijingnews.utils.ToastUtil;
+import com.yinghuo.beijingnews.utils.SharePreferenceUtil;
 
 public class SplashActivity extends Activity {
 
+    private RelativeLayout rel_splash;
+
     public static final String IS_FIRST_TIME = "is_first_time";
-    ImageView iv_test;
-    TextView tv_test;
-    TextView tv_company;
     boolean isFirst;
 
     @Override
@@ -29,37 +27,64 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        iv_test = (ImageView) findViewById(R.id.iv_test);
-        tv_test = (TextView) findViewById(R.id.tv_test);
-        tv_company = (TextView) findViewById(R.id.tv_company);
-        propertyValuesHolder(iv_test);
-        propertyValuesHolder(tv_test);
-        propertyValuesHolder(tv_company);
+        rel_splash = (RelativeLayout) findViewById(R.id.rel_splash);
 
-        //需要监听动画播放完这个动作
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0,1);
+//        alphaAnimation.setDuration(1000);
+//        alphaAnimation.setFillAfter(true);
 
-/*
-        isFirst = saveUtil.getBoolean(this, IS_FIRST_TIME);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(0,1,0,1,ScaleAnimation.RELATIVE_TO_SELF,0.5f,ScaleAnimation.RELATIVE_TO_SELF,0.5f);
+//        scaleAnimation.setDuration(1000);
+//        scaleAnimation.setFillAfter(true);
 
-        Intent intent;
-        if(!isFirst){
-            intent = new Intent(this,WelcomeActivity.class);
-            startActivity(intent);
-            saveUtil.setBoolean(this,IS_FIRST_TIME,true);
-        }else{
-            intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
+//用集合的好处时可以统一设置，避免混乱，也可以统一播放时间，当然分开设置也可以统一播放
+        AnimationSet animationSet = new AnimationSet(false);
+
+        animationSet.addAnimation(alphaAnimation);
+        animationSet.addAnimation(scaleAnimation);
+        animationSet.setDuration(1000);//这里设置了会覆盖上面的时间设置
+        animationSet.setFillAfter(true);
+        //为动画设置监听，因为动画完成后需要相应处理才行
+        animationSet.setAnimationListener(new MyAnimationListener());
+        rel_splash.setAnimation(animationSet);
+
+    }
+
+    /**
+     * 监听动画播放完成的内部类
+     */
+        class MyAnimationListener implements Animation.AnimationListener{
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+//                ToastUtil.showShort(SplashActivity.this,"animation end");
+
+                isFirst = SharePreferenceUtil.getBoolean(SplashActivity.this, IS_FIRST_TIME);
+
+                LogUtil.i(" "+isFirst);
+
+                Intent intent;
+                if(!isFirst){
+                    intent = new Intent(SplashActivity.this,WelcomeActivity.class);
+                    startActivity(intent);
+//                    SharePreferenceUtil.setBoolean(SplashActivity.this,IS_FIRST_TIME,true);
+                }else{
+                    intent = new Intent(SplashActivity.this,MainActivity.class);
+                    startActivity(intent);
+                }
+                finish();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
         }
-        finish();*/
-    }
 
-    public void propertyValuesHolder(View view) {
-        PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat("alpha", 1f,
-                0f, 1f);
-        PropertyValuesHolder pvhY = PropertyValuesHolder.ofFloat("scaleX", 1f,
-                0, 1f);
-        PropertyValuesHolder pvhZ = PropertyValuesHolder.ofFloat("scaleY", 1f,
-                0, 1f);
-        ObjectAnimator.ofPropertyValuesHolder(view, pvhX, pvhY, pvhZ).setDuration(3000).start();
-    }
 }

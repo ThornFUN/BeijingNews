@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_splash"
+    android:id="@+id/rel_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yinghuo.beijingnews.activity.SplashActivity">
@@ -25,7 +25,7 @@
     <TextView
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
-        android:text="武汉莹火有限责任公司"
+        android:text="武汉莹火科技有限责任公司"
         android:textSize="15sp"
         android:layout_below="@id/tv_test"
         android:id="@+id/tv_company"
